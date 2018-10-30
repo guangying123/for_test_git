@@ -1,0 +1,29 @@
+package Tool;
+
+import java.awt.List;
+import java.util.ArrayList;
+
+public class Data 
+{
+	
+	static ArrayList<Node> data = new ArrayList<Node>();
+	
+	
+	public Data(int n)
+	{
+		for (int i = 0; i < n; i++)
+		{
+			data.add(new Node());
+		}
+	}
+	
+	class Node
+    {
+         String MsgName = "name1";
+         int MsgValueInDoc = 10;
+         int MsgValueInJar = 11;
+         String Notice = "notice";
+    }
+}
+
+
