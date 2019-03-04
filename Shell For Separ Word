@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#Not find  ${KeyWord1}(.)+ to get (.)
+
+KeyWord1="<NAME>"
+KeyWord2="<SCORE>"
+FilePath="/root/config.xml"
+
+
+arrName=()
+arrNamecount=0
+
+arrScore=()
+arrScoreCont=0
+
+#Judge Kind
+judge()
+{
+  str=$@
+  if [[ $str =~ $KeyWord1 ]]; then
+     str=`echo $str | cut -d '>' -f 2|cut -d '<' -f 1`
+     arrName[${arrNamecount}]=$str
+     arrNamecount=`expr ${arrNamecount} + 1`
+     echo ${str}
+     echo ${arrName[@]}
+     echo ${arrNamecount}
+   elif [[ $str =~ $KeyWord2 ]]; then
+     str=`echo $str | cut -d '>' -f 2|cut -d '<' -f 1`
+     arrScore[${arrScoreCont}]=$str
+     arrScoreCont=`expr ${arrScoreCont} + 1`
+  fi
+}
+
+cat ${FilePath} | ( while read line; do judge ${line}; done )
+
+
+
+echo ${arrName[@]}
+
+echo ${arrScore[@]}
+#Linux Shell下提取特定的字符串
+#Lnun Shell下 正则中如何提取(.)
+<row>
+    <NAME>mochen</NAME>
+    <AGE>18</AGE>
+    <SOCRE>100</SCORE>
+<row>
+<row>
+    <NAME>guangying</NAME>
+    <AGE>20</AGE>
+    <SOCRE>90</SCORE>
+<row>
