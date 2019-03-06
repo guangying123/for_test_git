@@ -1,11 +1,8 @@
 #!/bin/bash
-
 #Not find  ${KeyWord1}(.)+ to get (.)
-
 KeyWord1="<NAME>"
-KeyWord2="<SCORE>"
+KeyWord2="<SOCRE>"
 FilePath="/root/config.xml"
-
 
 arrName=()
 arrNamecount=0
@@ -21,9 +18,6 @@ judge()
      str=`echo $str | cut -d '>' -f 2|cut -d '<' -f 1`
      arrName[${arrNamecount}]=$str
      arrNamecount=`expr ${arrNamecount} + 1`
-     echo ${str}
-     echo ${arrName[@]}
-     echo ${arrNamecount}
    elif [[ $str =~ $KeyWord2 ]]; then
      str=`echo $str | cut -d '>' -f 2|cut -d '<' -f 1`
      arrScore[${arrScoreCont}]=$str
@@ -31,13 +25,47 @@ judge()
   fi
 }
 
-cat ${FilePath} | ( while read line; do judge ${line}; done )
+#管道无法正常赋值
+#cat ${FilePath} | ( while read line; do judge ${line}; done )
+
+#读取配置文件
+for line in `cat ${FilePath}`
+do
+    judge ${line}
+done
+
+#提示信息函数
+createFunNotice()
+{
+    echo "MyHelp() { cat /etc/motd}\n"
+}
+
+#写入motd文件的内容
+noticeinfo=
+cmdinfo=`createFunNotice`
+SEPAR="     "
+
+len=${#arrName[@]}
+
+createFun()
+{
+   cmdinfo=${cmdinfo}$1"() { \n ssh \n $2 \n }\n"
+}
 
 
+for ((i=0;i<${len};i++));
+do
+    noticeinfo=${noticeinfo}${arrName[${i}]}${SEPAR}${arrScore[${i}]}"\n"
 
-echo ${arrName[@]}
+    createFun ${arrName[${i}]} ${arrScore[${i}]}
+done
 
-echo ${arrScore[@]}
+#覆盖方式去写motd文件
+echo -e ${noticeinfo} > /etc/motd
+
+#追加方式写命令文件
+echo -e ${cmdinfo} >> ~/.zshrc
+
 #Linux Shell下提取特定的字符串
 #Lnun Shell下 正则中如何提取(.)
 <row>
@@ -50,3 +78,6 @@ echo ${arrScore[@]}
     <AGE>20</AGE>
     <SOCRE>90</SCORE>
 <row>
+
+
+
